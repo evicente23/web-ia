@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, {  useState } from "react";
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { getTokenOrRefresh, getRespuesta } from './token_util';
 const speechRecognitionLanguage = 'es-EC';
 
 export default function Speack(props) {
-  const { texto } = props
   const [displayText, setDisplayText] = useState('INITIALIZED: ready to test speech...');
 
   React.useEffect(() => {

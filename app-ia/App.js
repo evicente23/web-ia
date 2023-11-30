@@ -8,7 +8,7 @@ export default function App() {
       <StatusBar style="auto" />
       <WebView
       style={{flex:1,height:100,width:300}}
-      source={{ uri: 'https://expo.dev' }}
+      source={{ uri: 'https://singular-biscochitos-3ca0ca.netlify.app/' }}
     />
     </View>
   );

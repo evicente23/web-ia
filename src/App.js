@@ -1,11 +1,17 @@
 import './App.css';
 import Speack from './Speack';
+import { Grid } from "@mui/material";
 
 function App() {
   return (
-    <div className="App">
+    <Grid
+      container
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Speack></Speack>
-    </div>
+    </Grid>
   );
 }
 

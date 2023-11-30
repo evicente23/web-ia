@@ -1,0 +1,70 @@
+{
+  "ecmaFeatures": {
+      "modules": true,
+      "spread" : true,
+      "restParams" : true
+  },
+  "env" : {
+      "browser" : true,
+      "node" : true,
+      "es6" : true
+  },
+
+  "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": 2020
+
+  },
+
+  "extends": [
+    "airbnb/hooks",
+    "plugin:react-hooks/recommended"
+
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [
+          "src"
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".mdx"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "react/jsx-uses-react": "off",
+    "react/jsx-uses-vars": "off",
+    "comma-dangle": "off",
+    "import/no-unresolved": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-console": "off",
+    "no-plusplus": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "no-unused-vars":"off"  ,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    
+    "no-restricted-syntax": [
+      "error", "Identifier[name='allowNull']"
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*"]
+      }
+    ]
+  
+  }
+}
+
+

@@ -20,7 +20,7 @@ export default function Speack(props) {
   const [hablando, setHablando] = useState(false);
 
   const [respuesta, setRespuesta] = useState('');
-  const [messages, setMessages] = React.useState([{respuesta: '...'}]);
+  const [messages, setMessages] = React.useState([{ respuesta: '...' }]);
   const messagesListRef = React.createRef();
 
   React.useEffect(() => {
@@ -53,28 +53,23 @@ export default function Speack(props) {
     setDisplayText('Habla por tu micrófono...');
     recognizer.recognizeOnceAsync(async result => {
       let displayText;
+      setMessages([{ respuesta: '...' }])
+
       if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
         setPregunta(result.text)
         setHablando(false)
 
         const ejemplo = await getRespuesta(result.text);
-        setMessages([])
-
-        //   setRespuesta(ejemplo.data.answer)
         setRespuesta(result.text)
-        // synthesizer.speakTextAsync(ejemplo.data.answer);
+        synthesizer.speakTextAsync(ejemplo.data.answer);
 
         let aux = []
         const rsto = {
-          respuesta: result.text
+          respuesta: ejemplo.data.answer
         }
-        setTimeout(() => {
-          aux.push(rsto)
-          console.error("aux", aux)
+        aux.push(rsto)
 
-          setMessages(aux)
-        }, 100);
-        console.error(messages)
+        setMessages(aux)
         synthesizer.speakTextAsync(result.text);
         displayText = `Listo para probar el hablado...`;
       } else {
@@ -132,7 +127,7 @@ export default function Speack(props) {
         >
           <Box
             sx={{
-             width: '100%',alignSelf:'center'
+              width: '100%', alignSelf: 'center'
             }}
           >
             {hablando ? <Equalizer /> : <Box sx={{ width: '100%', border: 1 }} />}

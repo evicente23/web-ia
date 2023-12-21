@@ -37,6 +37,7 @@ export default function Speack(props) {
     const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
     var player = new SpeechSDK.SpeakerAudioDestination();
+    player.pause();
     player.onAudioStart = function (_) {
     }
     player.onAudioEnd = function (_) {

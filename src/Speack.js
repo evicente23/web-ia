@@ -18,6 +18,7 @@ export default function Speack(props) {
   const [displayText, setDisplayText] = useState('Listo para probar el hablado...');
   const [pregunta, setPregunta] = useState('');
   const [hablando, setHablando] = useState(false);
+  const [hablandoNew, setHablandoNew] = useState(false);
 
   const [respuesta, setRespuesta] = useState('');
   const [messages, setMessages] = React.useState([{ respuesta: '...' }]);
@@ -37,8 +38,12 @@ export default function Speack(props) {
     const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
     var player = new SpeechSDK.SpeakerAudioDestination();
-    player.pause();
+    if (hablandoNew) {
+      player.pause();
+      setHablandoNew(false)
+    }
     player.onAudioStart = function (_) {
+      setHablandoNew(true)
     }
     player.onAudioEnd = function (_) {
     };
@@ -55,23 +60,25 @@ export default function Speack(props) {
     recognizer.recognizeOnceAsync(async result => {
       let displayText;
       setMessages([{ respuesta: '...' }])
-
       if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
         setPregunta(result.text)
         setHablando(false)
-
         const ejemplo = await getRespuesta(result.text);
         setRespuesta(result.text)
-        synthesizer.speakTextAsync(ejemplo.data.answer);
-
+        synthesizer.speakTextAsync(ejemplo.data.answer, function (result) {
+          synthesizer.close();
+          player.onAudioEnd = function () {
+            setHablandoNew(false)
+            console.error('speakTextAsync finished');
+          }
+        },
+          function (err) {
+            synthesizer.close();
+          });
         let aux = []
-        const rsto = {
-          respuesta: ejemplo.data.answer
-        }
+        const rsto = { respuesta: ejemplo.data.answer }
         aux.push(rsto)
-
         setMessages(aux)
-        synthesizer.speakTextAsync(result.text);
         displayText = `Listo para probar el hablado...`;
       } else {
         displayText = 'ERROR: Speech was cancelled or could not be recognized. Ensure your microphone is working properly.';

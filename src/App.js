@@ -1,5 +1,6 @@
 import './App.css';
 import Speack from './Speack';
+
 import { Grid } from "@mui/material";
 
 function App() {
@@ -10,8 +11,6 @@ function App() {
       justifyContent="center"
       alignItems="center"
     >
-
-      
       <Speack></Speack>
     </Grid>
   );

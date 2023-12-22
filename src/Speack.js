@@ -5,6 +5,8 @@ const speechRecognitionLanguage = 'es-EC';
 import Button from '@mui/material/Button';
 import { Grid, Box, CardContent, Typography, TextField } from '@mui/material';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import Pause from '@mui/icons-material/Pause';
+
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ImgB from "./kia-b.png";
@@ -23,41 +25,38 @@ export default function Speack(props) {
   const [respuesta, setRespuesta] = useState('');
   const [messages, setMessages] = React.useState([{ respuesta: '...' }]);
   const messagesListRef = React.createRef();
+  const speechConfig = React.useRef(null);
+  const recognizer = React.useRef(null);
+  const audioConfig = React.useRef(null);
+  const audioConfig2 = React.useRef(null);
+  const player = React.useRef(null);
+  const synthesizer = React.useRef(null);
 
   React.useEffect(() => {
-
+    obtenerTocken();
   }, []);
-  async function sttFromMic(setDisplayText) {
-    setHablando(true)
-
+  async function obtenerTocken() {
     const tokenObj = await getTokenOrRefresh();
-    const speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenObj.authToken, tokenObj.region);
-    speechConfig.speechRecognitionLanguage = speechRecognitionLanguage;
+    speechConfig.current = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenObj.authToken, tokenObj.region);
+    speechConfig.current.speechRecognitionLanguage = speechRecognitionLanguage;
+    audioConfig.current = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+    recognizer.current = new SpeechSDK.SpeechRecognizer(speechConfig.current, audioConfig.current);
+    player.current = new SpeechSDK.SpeakerAudioDestination();
+    audioConfig2.current = SpeechSDK.AudioConfig.fromSpeakerOutput(player.current);
+    speechConfig.current.speechSynthesisVoiceName = "es-EC-AndreaNeural";
+    synthesizer.current = new SpeechSDK.SpeechSynthesizer(speechConfig.current, audioConfig2.current);
 
-    const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-    const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
+  }
+  async function sttFromMic(setDisplayText) {
 
-    var player = new SpeechSDK.SpeakerAudioDestination();
-    if (hablandoNew) {
-      player.pause();
-      setHablandoNew(false)
-    }
-    player.onAudioStart = function (_) {
+    player.current.onAudioStart = function (_) {
       setHablandoNew(true)
     }
-    player.onAudioEnd = function (_) {
+    player.current.onAudioEnd = function (_) {
     };
-
-    var audioConfig2 = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
-    speechConfig.speechSynthesisVoiceName = "es-EC-AndreaNeural";
-
-    const synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig2);
-    // You can use this callback to streaming receive the synthesized audio.
-    synthesizer.synthesizing = function (s, e) {
-
-    };
+    synthesizer.current.synthesizing = function (s, e) { };
     setDisplayText('Habla por tu micrófono...');
-    recognizer.recognizeOnceAsync(async result => {
+    recognizer.current.recognizeOnceAsync(async result => {
       let displayText;
       setMessages([{ respuesta: '...' }])
       if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
@@ -65,16 +64,13 @@ export default function Speack(props) {
         setHablando(false)
         const ejemplo = await getRespuesta(result.text);
         setRespuesta(result.text)
-        synthesizer.speakTextAsync(ejemplo.data.answer, function (result) {
-          synthesizer.close();
-          player.onAudioEnd = function () {
+        synthesizer.current.speakTextAsync(ejemplo.data.answer, function (result) {
+          synthesizer.current.close();
+          player.current.onAudioEnd = function () {
             setHablandoNew(false)
             console.error('speakTextAsync finished');
           }
-        },
-          function (err) {
-            synthesizer.close();
-          });
+        });
         let aux = []
         const rsto = { respuesta: ejemplo.data.answer }
         aux.push(rsto)
@@ -87,6 +83,12 @@ export default function Speack(props) {
       setDisplayText(displayText);
     });
   }
+
+  const stopListening = () => {
+    player.current.pause();
+    setHablandoNew(false)
+   
+  };
 
   return (
 
@@ -101,7 +103,7 @@ export default function Speack(props) {
           />
         </Box>
         <Typography gutterBottom variant="body2" component="div" sx={{ mt: 1.5 }} textAlign={'center'}>
-          {"Manual de marca online"}
+          {"Manual de marca online "}
         </Typography>
         <Box
           ref={messagesListRef}
@@ -138,13 +140,13 @@ export default function Speack(props) {
               width: '100%', alignSelf: 'center'
             }}
           >
-            {hablando ? <Equalizer /> : <Box sx={{ width: '100%', border: 1 }} />}
+            {hablandoNew ? <Equalizer /> : <Box sx={{ width: '100%', border: 1 }} />}
           </Box>
 
 
 
-          <IconButton aria-label="delete" onClick={() => sttFromMic(setDisplayText)}>
-            <KeyboardVoiceIcon fontSize="inherit" />
+          <IconButton aria-label="delete" onClick={() => !hablandoNew ? sttFromMic(setDisplayText) : stopListening()}>
+            {hablandoNew ? <Pause /> : <KeyboardVoiceIcon fontSize="inherit" />}
           </IconButton>
         </Box>
 

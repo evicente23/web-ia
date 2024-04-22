@@ -34,7 +34,7 @@ async function post(value) {
         }
     };
     try {
-        const tokenResponse = await axios.post(`https://9764-204-199-153-4.ngrok-free.app/questions`, {question:value},headers);
+        const tokenResponse = await axios.post(`https://a98e-204-199-153-4.ngrok-free.app/questions`, {question:value},headers);
         return tokenResponse;
     } catch (err) {
         //res.status(401).send('There was an error authorizing your speech key.');

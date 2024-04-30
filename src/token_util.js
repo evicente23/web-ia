@@ -34,7 +34,7 @@ async function post(value) {
         }
     };
     try {
-        const tokenResponse = await axios.post(`http://13.92.91.2:8095/questions`, {question:value},headers);
+        const tokenResponse = await axios.post(`https://openai-manuales.inpsercom.com/questions`, {question:value},headers);
         return tokenResponse;
     } catch (err) {
         //res.status(401).send('There was an error authorizing your speech key.');

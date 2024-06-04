@@ -23,13 +23,18 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function Speack(props) {
   const [displayText, setDisplayText] = useState('Listo para probar el hablado...');
   const [pregunta, setPregunta] = useState('');
-  const [preguntas, setPreguntas] = useState([
+  const [preguntas, setPreguntas] = useState([]);
+  const [age, setAge] = React.useState('sportage');
 
-  ]);
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
   const [hablando, setHablando] = useState(false);
   const [hablandoNew, setHablandoNew] = useState(false);
   const [name, setName] = React.useState('');
@@ -59,9 +64,6 @@ export default function Speack(props) {
     synthesizer.current = new SpeechSDK.SpeechSynthesizer(speechConfig.current, audioConfig2.current);
 
   }
-  const handleOpen = () => {
-    setOpen(true);
-  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -93,7 +95,7 @@ export default function Speack(props) {
         setPregunta(result.text)
 
         setHablando(false)
-        const ejemplo = await getRespuesta(result.text, name);
+        const ejemplo = await getRespuesta(result.text+ ' '+ age, name);
         setRespuesta(result.text)
         setPreguntas(prevPreguntas => {
           const newPreguntas = [...prevPreguntas];
@@ -149,23 +151,57 @@ export default function Speack(props) {
           <DialogContentText id="alert-dialog-description">
             Para continuar con el chat KIA, por favor ingresa tu identificación.
           </DialogContentText>
-          <FormControl variant="standard">
-            <InputLabel htmlFor="input-with-icon-adornment">
-              Identificación
-            </InputLabel>
-            <Input
-              id="input-with-icon-adornment"
-              value={name}
-              onChange={e => {
-                setName(e.target.value);
-              }}
-              startAdornment={
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+          <Box sx={{ minWidth: 120}}>
+
+            <FormControl variant="standard"                 style={{width:'100%'}}
+>
+              <InputLabel htmlFor="input-with-icon-adornment">
+                Identificación
+              </InputLabel>
+              <Input
+                id="input-with-icon-adornment"
+                value={name}
+                fullWidth
+                onChange={e => {
+                  setName(e.target.value);
+                }}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <AccountCircle />
+                  </InputAdornment>
+                }
+              />
+
+            </FormControl>
+          </Box>
+          <Box sx={{ minWidth: 120, marginTop: 5 }}>
+            <FormControl fullWidth>
+
+              <InputLabel id="demo-simple-select-label" htmlFor="input-with-icon-adornment">Modelo</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+
+                id="demo-simple-select"
+                value={age}
+                label="Age"
+                onChange={handleChange}
+              >
+                <MenuItem value={'carnival'}>Carnival</MenuItem>
+                <MenuItem value={'cerato'}>Cerato</MenuItem>
+                <MenuItem value={'niro'}>Niro</MenuItem>
+                <MenuItem value={'optima'}>Optima</MenuItem>
+                <MenuItem value={'picanto'}>Picanto</MenuItem>
+                <MenuItem value={'rio'}>Rio</MenuItem>
+                <MenuItem value={'seltos'}>Seltos</MenuItem>
+                <MenuItem value={'sonet'}>Sonet</MenuItem>
+                <MenuItem value={'sorento'}>Sorento</MenuItem>
+                <MenuItem value={'soul'}>Soul</MenuItem>
+                <MenuItem value={'sportage'}>Sportage</MenuItem>
+                <MenuItem value={'stinger'}>Stinger</MenuItem>
+                <MenuItem value={'stonic'}>Stonic</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus disabled={name == "" || name.length < 10}>Continuar</Button>
@@ -186,11 +222,15 @@ export default function Speack(props) {
         <Typography gutterBottom variant="body2" component="div" sx={{ mt: 1.5 }} textAlign={'center'}>
           {"Usuario: " + name}
         </Typography>
+        <Typography gutterBottom variant="body2" component="div" sx={{ mt: 1.5 }} textAlign={'center'}>
+          {"Modelo: " + age}
+        </Typography>
+        
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            height:'70vh'
+            height: '70vh'
           }}
         >
           <Box
@@ -199,7 +239,7 @@ export default function Speack(props) {
               flex: 1,
               overflow: "scroll",
               overflowX: "hidden",
-            
+
             }}
           >
             <Box sx={{ m: 1, mr: 2 }}>

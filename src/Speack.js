@@ -95,7 +95,7 @@ export default function Speack(props) {
         setPregunta(result.text)
 
         setHablando(false)
-        const ejemplo = await getRespuesta(result.text+ ' '+ age, name);
+        const ejemplo = await getRespuesta(result.text, name, age);
         setRespuesta(result.text)
         setPreguntas(prevPreguntas => {
           const newPreguntas = [...prevPreguntas];
@@ -151,10 +151,10 @@ export default function Speack(props) {
           <DialogContentText id="alert-dialog-description">
             Para continuar con el chat KIA, por favor ingresa tu identificación.
           </DialogContentText>
-          <Box sx={{ minWidth: 120}}>
+          <Box sx={{ minWidth: 120 }}>
 
-            <FormControl variant="standard"                 style={{width:'100%'}}
->
+            <FormControl variant="standard" style={{ width: '100%' }}
+            >
               <InputLabel htmlFor="input-with-icon-adornment">
                 Identificación
               </InputLabel>
@@ -199,6 +199,7 @@ export default function Speack(props) {
                 <MenuItem value={'sportage'}>Sportage</MenuItem>
                 <MenuItem value={'stinger'}>Stinger</MenuItem>
                 <MenuItem value={'stonic'}>Stonic</MenuItem>
+                <MenuItem value={''}>Otros</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -225,7 +226,7 @@ export default function Speack(props) {
         <Typography gutterBottom variant="body2" component="div" sx={{ mt: 1.5 }} textAlign={'center'}>
           {"Modelo: " + age}
         </Typography>
-        
+
         <Box
           sx={{
             display: 'flex',

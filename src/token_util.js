@@ -25,7 +25,7 @@ async function get(value) {
         }
     }
 };
-async function post(value,name) {
+async function post(value,name,vehicleModel) {
     const headers = {
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ async function post(value,name) {
         }
     };
     try {
-        const tokenResponse = await axios.post(`https://openai-manuales.inpsercom.com/questions`, {question:value,userId:name},headers);
+        const tokenResponse = await axios.post(`https://openai-manuales.inpsercom.com/questions`, {question:value,userId:name,vehicleModel:vehicleModel},headers);
         return tokenResponse;
     } catch (err) {
         //res.status(401).send('There was an error authorizing your speech key.');
@@ -67,7 +67,7 @@ export async function getTokenOrRefresh() {
     }
 }
 
-export async function getRespuesta(value,name) {
-    return  await post(value,name);
+export async function getRespuesta(value,name,vehicleModel) {
+    return  await post(value,name,vehicleModel);
 
 }

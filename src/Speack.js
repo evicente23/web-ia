@@ -198,11 +198,11 @@ export default function Speack(props) {
                 <MenuItem value={'soul'}>Soul</MenuItem>
                 <MenuItem value={'sportage'}>Sportage</MenuItem>
                 <MenuItem value={'stinger'}>Stinger</MenuItem>
-                <MenuItem value={'stonic'}>Ev5</MenuItem>
-                <MenuItem value={'stonic'}>Ev6</MenuItem>
-                <MenuItem value={'stonic'}>Ev9</MenuItem>
-                <MenuItem value={'stonic'}>K3</MenuItem>
-                <MenuItem value={'stonic'}>K5</MenuItem>
+                <MenuItem value={'ev5'}>Ev5</MenuItem>
+                <MenuItem value={'ev6'}>Ev6</MenuItem>
+                <MenuItem value={'ev9'}>Ev9</MenuItem>
+                <MenuItem value={'k3'}>K3</MenuItem>
+                <MenuItem value={'k5'}>K5</MenuItem>
                 <MenuItem value={'stonic'}>Stonic</MenuItem>
 
                 <MenuItem value={''}>Otros</MenuItem>

@@ -111,8 +111,6 @@ export default function Speack(props) {
         setHablando(false)
         const ejemplo2 = await getRespuesta(result.text, name, age);
         const ejemplo=replaceUrls(ejemplo2?.data)
-        console.error('ejemplo', ejemplo)
-
         setRespuesta(result.text)
         setPreguntas(prevPreguntas => {
           const newPreguntas = [...prevPreguntas];
@@ -127,7 +125,6 @@ export default function Speack(props) {
           player.current.onAudioEnd = function () {
             obtenerTocken();
             setHablandoNew(false)
-            console.error('speakTextAsync finished');
           }
         });
         let aux = []

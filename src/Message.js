@@ -26,7 +26,6 @@ export default function Message(props) {
   const [inf, setInf] = React.useState(choices);
 
   React.useEffect(() => {
-    console.error("choices", choices);
     setInf(choices);
   }, [choices]);
 

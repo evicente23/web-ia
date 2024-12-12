@@ -69,14 +69,17 @@ export default function Speack(props) {
   };
   function replaceUrls(data) {
     let updatedAnswer = data.answer;
+    let cleanedAnswer = data.answer; // Variable para almacenar el texto con los string_replace eliminados
   
     data.urls.forEach(({ string_replace, url }) => {
       updatedAnswer = updatedAnswer.replace(string_replace, url);
+      cleanedAnswer = cleanedAnswer.replace(string_replace, ""); // Eliminar string_replace
     });
   
     return {
       ...data,
-      answer: updatedAnswer, 
+      answer: updatedAnswer, // Respuesta con URLs reemplazadas
+      cleanedAnswer, // Respuesta con los string_replace eliminados
     };
   }
   async function sttFromMic(setDisplayText) {
@@ -109,7 +112,7 @@ export default function Speack(props) {
         const ejemplo2 = await getRespuesta(result.text, name, age);
         const ejemplo=replaceUrls(ejemplo2?.data)
         console.error('ejemplo', ejemplo)
-        console.error('ejemplo2', ejemplo2.data)
+
         setRespuesta(result.text)
         setPreguntas(prevPreguntas => {
           const newPreguntas = [...prevPreguntas];
@@ -119,7 +122,7 @@ export default function Speack(props) {
           };
           return newPreguntas; // Retornar el nuevo estado
         });
-        synthesizer.current.speakTextAsync(ejemplo.answer, function (result) {
+        synthesizer.current.speakTextAsync(ejemplo.cleanedAnswer, function (result) {
           synthesizer.current.close();
           player.current.onAudioEnd = function () {
             obtenerTocken();

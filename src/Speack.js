@@ -67,7 +67,18 @@ export default function Speack(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  function replaceUrls(data) {
+    let updatedAnswer = data.answer;
+  
+    data.urls.forEach(({ string_replace, url }) => {
+      updatedAnswer = updatedAnswer.replace(string_replace, url);
+    });
+  
+    return {
+      ...data,
+      answer: updatedAnswer, 
+    };
+  }
   async function sttFromMic(setDisplayText) {
 
     player.current.onAudioStart = function (_) {
@@ -95,17 +106,20 @@ export default function Speack(props) {
         setPregunta(result.text)
 
         setHablando(false)
-        const ejemplo = await getRespuesta(result.text, name, age);
+        const ejemplo2 = await getRespuesta(result.text, name, age);
+        const ejemplo=replaceUrls(ejemplo2?.data)
+        console.error('ejemplo', ejemplo)
+        console.error('ejemplo2', ejemplo2.data)
         setRespuesta(result.text)
         setPreguntas(prevPreguntas => {
           const newPreguntas = [...prevPreguntas];
           newPreguntas[newPreguntas.length - 1] = {
             ...newPreguntas[newPreguntas.length - 1],
-            messages: ejemplo.data.answer
+            messages: ejemplo.answer
           };
           return newPreguntas; // Retornar el nuevo estado
         });
-        synthesizer.current.speakTextAsync(ejemplo.data.answer, function (result) {
+        synthesizer.current.speakTextAsync(ejemplo.answer, function (result) {
           synthesizer.current.close();
           player.current.onAudioEnd = function () {
             obtenerTocken();
@@ -114,7 +128,7 @@ export default function Speack(props) {
           }
         });
         let aux = []
-        const rsto = { respuesta: ejemplo.data.answer }
+        const rsto = { respuesta: ejemplo.answer }
         aux.push(rsto)
         setMessages(aux)
         displayText = `Listo para probar el hablado...`;

@@ -1,15 +1,35 @@
 import React, { useState } from "react";
+import { Chip, Box, Avatar, Typography, TextField } from '@mui/material';
 import avatar from "./6596121.png";
-import { Avatar, Box, Chip, Typography } from "@mui/material";
+
+function renderWithLinks(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.split(urlRegex).map((part, index) =>
+    urlRegex.test(part) ? (
+      <a
+        key={index}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "#007BFF", textDecoration: "none" }}
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  );
+}
 
 export default function Message(props) {
   const { choices } = props;
-  const [inf, setInf] = useState(choices);
+  const [inf, setInf] = React.useState(choices);
 
   React.useEffect(() => {
-    console.error("choices", choices)
-    setInf(choices)
+    console.error("choices", choices);
+    setInf(choices);
   }, [choices]);
+
   return (
     <div>
       <Box
@@ -34,16 +54,19 @@ export default function Message(props) {
           )}
           {!props.isCustomer && inf && (
             <Box sx={{ mt: 1 }}>
+              {/* Aquí usamos renderWithLinks para procesar el texto dentro del Chip */}
               <Chip
-                label={choices}
+                label={<span>{renderWithLinks(choices)}</span>}
                 sx={{
-                  mr: 0.5, mb: 0.5, padding: 1, height: 'auto',
-                  '& .MuiChip-label': {
-                    display: 'block',
-                    whiteSpace: 'normal',
-                  }
+                  mr: 0.5,
+                  mb: 0.5,
+                  padding: 1,
+                  height: "auto",
+                  "& .MuiChip-label": {
+                    display: "block",
+                    whiteSpace: "normal",
+                  },
                 }}
-
               />
             </Box>
           )}
